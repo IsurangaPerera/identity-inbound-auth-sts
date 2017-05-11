@@ -26,13 +26,13 @@
   </filter-mapping>
 
   <servlet>
-    <servlet-name>OAuth2Endpoints</servlet-name>
+    <servlet-name>STSEndpoints</servlet-name>
     <servlet-class>org.apache.cxf.transport.servlet.CXFServlet</servlet-class>
     <load-on-startup>1</load-on-startup>
   </servlet>
 
   <servlet-mapping>
-    <servlet-name>OAuth2Endpoints</servlet-name>
+    <servlet-name>STSEndpoints</servlet-name>
     <url-pattern>/*</url-pattern>
   </servlet-mapping>
 
