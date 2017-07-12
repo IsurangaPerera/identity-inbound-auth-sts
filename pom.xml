@@ -23,6 +23,7 @@
     <module>org.wso2.carbon.sts.claim.mgt</module>
     <module>org.wso2.carbon.sts.token.provider</module>
     <module>org.wso2.carbon.sts2</module>
+    <module>org.wso2.carbon.sts.policy.mgt</module>
   </modules>
 
 	<dependencies>
