@@ -3,12 +3,14 @@ package org.wso2.carbon.sts.store;
 public class DBQueries {
 
     public static final String ADD_TOKEN = "INSERT INTO IDN_STS_STORE (TOKEN_ID, TOKEN_CONTENT,CREATE_DATE," +
-                                           " EXPIRE_DATE,STATE)  VALUES (?,?,?,?,?)";
+                                           " EXPIRE_DATE)  VALUES (?,?,?,?)";
 
     public static final String UPDATE_TOKEN = "UPDATE  IDN_STS_STORE SET TOKEN_CONTENT = ? ,CREATE_DATE = ?," +
-                                              "EXPIRE_DATE = ?, STATE = ?  WHERE TOKEN_ID = ?";
+                                              "EXPIRE_DATE = ? WHERE TOKEN_ID = ?";
 
     public static final String REMOVE_TOKEN = "DELETE FROM  IDN_STS_STORE WHERE TOKEN_ID = ?";
+    
+    public static final String REMOVE_EXPIRED_TOKENS = "DELETE FROM IDN_STS_STORE WHERE EXPIRE_DATE < ?";
 
     public static final String ALL_TOKEN_KEYS = "SELECT TOKEN_ID  FROM  IDN_STS_STORE";
 

@@ -4,3 +4,6 @@ org.wso2.carbon.sts/org.wso2.carbon.sts.iml
 .gitignore
 .project
 .settings
+target
+org.wso2.carbon.sts.store/target
+org.wso2.carbon.sts/target
