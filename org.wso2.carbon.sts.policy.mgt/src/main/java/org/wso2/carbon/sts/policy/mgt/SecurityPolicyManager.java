@@ -20,6 +20,12 @@ public class SecurityPolicyManager implements SecurityPolicyProvider {
 			.getLogger(DataHolder.class);
 
 	private Policy effectivePolicy;
+	
+	public SecurityPolicyManager() {
+		
+		int scenario = DataHolder.getInstance().getPolicyScenario();
+		updateEffectivePolicy(scenario);
+	}
 
 	@Override
 	public void updateEffectivePolicy(int scenario) {
