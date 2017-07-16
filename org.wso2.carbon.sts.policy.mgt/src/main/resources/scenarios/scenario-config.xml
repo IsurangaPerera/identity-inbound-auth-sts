@@ -16,16 +16,13 @@
  ~ under the License.
  -->
 
-<RampartSecurityScenarios xmlns="http://www.wso2.org/products/carbon/security">
+<SecurityScenarios xmlns="http://www.wso2.org/products/carbon/security">
     
     <!-- Basic scenarios -->
     <Scenario id="scenario1">
         <Summary>UsernameToken</Summary>
         <Description>Provides Authentication. Clients have Username Tokens</Description>
         <Category>ut</Category>
-        <Modules>
-            <Module>rampart</Module>
-        </Modules>
         <WsuId>UTOverTransport</WsuId>
         <Type>basic</Type>
     </Scenario>
@@ -33,9 +30,6 @@
         <Summary>Non-repudiation</Summary>
         <Description>Provides Authentication and Integrity. Clients have X509 certificates</Description>
         <Category>keystore</Category>
-        <Modules>
-            <Module>rampart</Module>
-        </Modules>
         <WsuId>SigOnly</WsuId>
         <Type>basic</Type>
     </Scenario>
@@ -43,9 +37,6 @@
         <Summary>Integrity</Summary>
         <Description>Provides Integrity. Clients do not have X509 certificates</Description>
         <Category>keystore</Category>
-        <Modules>
-            <Module>rampart</Module>
-        </Modules>
         <WsuId>SgnOnlyAnonymous</WsuId>
         <Type>basic</Type>
     </Scenario>
@@ -53,9 +44,6 @@
         <Summary>Confidentiality</Summary>
         <Description>Provides Confidentiality. Clients do not have X509 certificates</Description>
         <Category>keystore</Category>
-        <Modules>
-            <Module>rampart</Module>
-        </Modules>
         <WsuId>EncrOnlyAnonymous</WsuId>
         <Type>basic</Type>
     </Scenario>
@@ -65,9 +53,6 @@
         <Summary>Sign and Encrypt - X509 Authentication</Summary>
         <Description>Provides Authentication, Integrity and Confidentiality. Clients have X509 certificates</Description>
         <Category>keystore</Category>
-        <Modules>
-            <Module>rampart</Module>
-        </Modules>
         <WsuId>SigEncr</WsuId>
         <Type>advanced</Type>
     </Scenario>
@@ -75,9 +60,6 @@
         <Summary>Sign and Encrypt - Anonymous clients </Summary>
         <Description>Provides Integrity and Confidentiality.</Description>
         <Category>keystore</Category>
-        <Modules>
-            <Module>rampart</Module>
-        </Modules>
         <WsuId>SgnEncrAnonymous</WsuId>
         <Type>advanced</Type>
     </Scenario>
@@ -85,9 +67,6 @@
         <Summary>Encrypt only - Username Token Authentication </Summary>
         <Description>Provides Authentication and Confidentiality. Clients have Username Tokens</Description>
         <Category>ut-keystore</Category>
-        <Modules>
-            <Module>rampart</Module>
-        </Modules>
         <WsuId>EncrOnlyUsername</WsuId>
         <Type>advanced</Type>
     </Scenario>
@@ -95,9 +74,6 @@
         <Summary>Sign and Encrypt - Username Token Authentication</Summary>
         <Description>Provides Authentication, Integrity and Confidentiality. Clients have Username Tokens</Description>
         <Category>ut-keystore</Category>
-        <Modules>
-            <Module>rampart</Module>
-        </Modules>
         <WsuId>SgnEncrUsername</WsuId>
         <Type>advanced</Type>
     </Scenario>
@@ -105,10 +81,6 @@
         <Summary>SecureConversation - Sign only - Service as STS - Bootstrap policy - Sign and Encrypt , X509 Authentication </Summary>
         <Description>Provides Authentication and Integrity. Multiple message exchange.Clients have X509 certificates. </Description>
         <Category>keystore</Category>
-        <Modules>
-            <Module>rampart</Module>
-            <Module>rahas</Module>
-        </Modules>
         <WsuId>SecConSignOnly</WsuId>
         <Type>advanced</Type>
     </Scenario>
@@ -117,10 +89,6 @@
             Sign and Encrypt , X509 Authentication </Summary>
         <Description>Provides Confidentiality. Multiple message exchange.Clients have X509 certificates. </Description>
         <Category>keystore</Category>
-        <Modules>
-            <Module>rampart</Module>
-            <Module>rahas</Module>
-        </Modules>
         <WsuId>SecConEncrOnly</WsuId>
         <Type>advanced</Type>
     </Scenario>
@@ -128,10 +96,6 @@
         <Summary>SecureConversation - Sign and Encrypt - Service as STS - Bootstrap policy - Sign and Encrypt , X509 Authentication </Summary>
         <Description>Provides Authentication, Integrity and Confidentiality. Multiple message exchange.Clients have X509 certificates.</Description>
         <Category>keystore</Category>
-        <Modules>
-            <Module>rampart</Module>
-            <Module>rahas</Module>
-        </Modules>
         <WsuId>SecConSgnEncr</WsuId>
         <Type>advanced</Type>
     </Scenario>
@@ -139,10 +103,6 @@
         <Summary>SecureConversation - Sign Only - Service as STS - Bootstrap policy - Sign and Encrypt , Anonymous clients</Summary>
         <Description>Provides Integrity. Multiple message exchange.</Description>
         <Category>keystore</Category>
-        <Modules>
-            <Module>rampart</Module>
-            <Module>rahas</Module>
-        </Modules>
         <WsuId>SecConSignOnlyAnonymous</WsuId>
         <Type>advanced</Type>
     </Scenario>
@@ -150,10 +110,6 @@
         <Summary>SecureConversation - Sign and Encrypt - Service as STS - Bootstrap policy - Sign and Encrypt , Anonymous clients</Summary>
         <Description>Provides Integrity and Confidentiality. Multiple message exchange.</Description>
         <Category>keystore</Category>
-        <Modules>
-            <Module>rampart</Module>
-            <Module>rahas</Module>
-        </Modules>
         <WsuId>SecConEncrOnlyAnonymous</WsuId>
         <Type>advanced</Type>
     </Scenario>
@@ -161,10 +117,6 @@
         <Summary>SecureConversation - Encrypt Only - Service as STS - Bootstrap policy - Sign and Encrypt , Username Token Authentication</Summary>
         <Description>Provides Authentication and Confidentiality. Multiple message exchange. Clients have Username Tokens.</Description>
         <Category>ut-keystore</Category>
-        <Modules>
-            <Module>rampart</Module>
-            <Module>rahas</Module>
-        </Modules>
         <WsuId>SecConEncrUsername</WsuId>
         <Type>advanced</Type>
     </Scenario>
@@ -172,10 +124,6 @@
         <Summary>SecureConversation - Sign and Encrypt - Service as STS - Bootstrap policy - Sign and Encrypt , Username Token Authentication</Summary>
         <Description>Provides Authentication Integrity and Confidentiality. Multiple message exchange. Clients have Username Tokens.</Description>
         <Category>ut-keystore</Category>
-        <Modules>
-            <Module>rampart</Module>
-            <Module>rahas</Module>
-        </Modules>
         <WsuId>SecConSgnEncrUsername</WsuId>
         <Type>advanced</Type>
     </Scenario>
@@ -183,9 +131,6 @@
         <Summary>Kerberos Authentication - Sign - Sign based on a Kerberos Token.</Summary>
         <Description>Provides Authentication, Integrity. Multiple message exchange. Clients has to obtain a Kerberos token from a KDC.</Description>
         <Category>kerberos</Category>
-        <Modules>
-            <Module>rampart</Module>
-        </Modules>
         <WsuId>kerberossignandencrypt</WsuId>
         <Type>advanced</Type>
     </Scenario> 
@@ -193,10 +138,6 @@
         <Summary>Client authenticates with SAML 2.0 protection token. Symmetric Key. X509 Certificate by the Service.</Summary>
         <Description>Client authenticates with SAML 2.0 protection token. Symmetric Key. X509 Certificate by the Service.</Description>
         <Category>keystore</Category>
-        <Modules>
-            <Module>rampart</Module>
-            <Module>rahas</Module>
-        </Modules>
         <WsuId>SAML2HoKProtection31</WsuId>
         <Type>advanced</Type>
     </Scenario>
@@ -204,10 +145,6 @@
         <Summary>Client authenticates with SAML 1.1 protection token. Symmetric Key. X509 Certificate by the Service.</Summary>
         <Description>Client authenticates with SAML 1.1 protection token. Symmetric Key. X509 Certificate by the Service.</Description>
         <Category>keystore</Category>
-        <Modules>
-            <Module>rampart</Module>
-            <Module>rahas</Module>
-        </Modules>
         <WsuId>SAML11HoKProtection32</WsuId>
         <Type>advanced</Type>
     </Scenario>
@@ -215,10 +152,6 @@
         <Summary>Sign and Encrypt - X509 Authentication - SAML 2.0 Token Required as Supporting.</Summary>
         <Description>Sign and Encrypt - X509 Authentication - SAML 2.0 Token Required as Supporting</Description>
         <Category>keystore</Category>
-        <Modules>
-            <Module>rampart</Module>
-            <Module>rahas</Module>            
-        </Modules>
         <WsuId>SigEncrSAML20Supporting33</WsuId>
         <Type>advanced</Type>
     </Scenario>
@@ -226,10 +159,6 @@
         <Summary>Sign and Encrypt - X509 Authentication - SAML 1.1 Token Required as Supporting.</Summary>
         <Description>Sign and Encrypt - X509 Authentication - SAML 1.1 Token Required as Supporting</Description>
         <Category>keystore</Category>
-        <Modules>
-            <Module>rampart</Module>
-            <Module>rahas</Module>
-        </Modules>
         <WsuId>SigEncrSAML11Supporting34</WsuId>
         <Type>advanced</Type>
     </Scenario>
@@ -237,11 +166,7 @@
         <Summary>Security Policy is in Registry</Summary>
         <Description>User specifies a Security Policy which is stored either in Configuration Registry or in Governance Registry</Description>
         <Category>ut-keystore</Category>
-        <Modules>
-            <Module>rampart</Module>
-            <Module>rahas</Module>           
-        </Modules>
         <WsuId>policyFromRegistry</WsuId>
         <Type>registryPolicy</Type>
     </Scenario>
-</RampartSecurityScenarios>
+</SecurityScenarios>

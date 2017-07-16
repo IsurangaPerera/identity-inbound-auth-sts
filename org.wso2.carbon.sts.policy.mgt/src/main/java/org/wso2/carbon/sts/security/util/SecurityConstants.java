@@ -1,6 +1,6 @@
-package org.wso2.carbon.sts.policy.util;
+package org.wso2.carbon.sts.security.util;
 
-public class PolicyConstants {
+public class SecurityConstants {
 	
 	//Need to replace with policy repository path
 	public static String POLICY_REPOSITORY_PATH ;
