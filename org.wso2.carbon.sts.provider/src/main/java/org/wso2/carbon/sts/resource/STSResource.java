@@ -4,6 +4,8 @@ import io.swagger.annotations.Info;
 import io.swagger.annotations.License;
 import io.swagger.annotations.SwaggerDefinition;
 
+import java.net.URL;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -11,6 +13,9 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.xml.soap.SOAPException;
 
+import org.apache.cxf.bus.spring.SpringBusFactory;
+import org.osgi.framework.BundleContext;
+import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
@@ -54,6 +59,13 @@ public class STSResource extends AbstractResource {
 		
 		return null;
 	}
+	
+	/*@Activate
+	public void sample(BundleContext c) {
+		SpringBusFactory bf = new SpringBusFactory();
+        URL busFile = c.getBundle().getResource("wssec-sts-stax.xml");
+        bf.createBus(busFile.toString());
+	}*/
 	
 	@Reference(
         name = "policy",

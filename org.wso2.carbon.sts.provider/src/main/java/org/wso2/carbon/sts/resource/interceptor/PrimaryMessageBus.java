@@ -8,7 +8,6 @@ import java.security.Principal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Map;
 
 import javax.xml.soap.SOAPException;
@@ -18,17 +17,25 @@ import javax.xml.ws.WebServiceContext;
 import javax.xml.ws.handler.MessageContext;
 import javax.xml.ws.handler.MessageContext.Scope;
 
+import org.apache.cxf.Bus;
 import org.apache.cxf.binding.soap.SoapMessage;
 import org.apache.cxf.binding.soap.saaj.SAAJInInterceptor;
+import org.apache.cxf.bus.extension.ExtensionManagerBus;
 import org.apache.cxf.bus.managers.PhaseManagerImpl;
-import org.apache.cxf.interceptor.Interceptor;
+import org.apache.cxf.endpoint.Endpoint;
+import org.apache.cxf.endpoint.EndpointException;
+import org.apache.cxf.endpoint.EndpointImpl;
 import org.apache.cxf.jaxws.context.WebServiceContextImpl;
 import org.apache.cxf.jaxws.context.WrappedMessageContext;
 import org.apache.cxf.message.Exchange;
 import org.apache.cxf.message.ExchangeImpl;
 import org.apache.cxf.message.Message;
 import org.apache.cxf.message.MessageImpl;
+import org.apache.cxf.phase.PhaseInterceptorChain;
 import org.apache.cxf.security.SecurityContext;
+import org.apache.cxf.service.Service;
+import org.apache.cxf.service.ServiceImpl;
+import org.apache.cxf.service.model.EndpointInfo;
 import org.apache.cxf.staxutils.StaxUtils;
 import org.apache.cxf.ws.security.wss4j.UsernameTokenInterceptor;
 import org.apache.neethi.Policy;
@@ -43,9 +50,9 @@ public class PrimaryMessageBus {
 
 	SAAJInInterceptor saajIn = new SAAJInInterceptor();
 	SoapMessageInterceptor in = new SoapMessageInterceptor();
-
+	
 	public String handleMessage(Request request) throws SOAPException {
-
+		
 		Policy policy = DataHolder.getInstance().getPolicy();
 
 		List<ByteBuffer> fullMessageBody = request.getFullMessageBody();
@@ -70,19 +77,16 @@ public class PrimaryMessageBus {
 		SOAPMessage soapResponse = null;
 
 		if (policy != null) {
-			PolicyEngine.initialiseInterceptors(policy,
+			
+			/*PolicyEngine.initialiseInterceptors(policy,
 					(Message) soap);
 			try{
-				ListIterator<Interceptor<? extends Message>> g = soap.getInterceptorChain().getIterator();
-				while(g.hasNext()){
-					System.out.println(g.next().getClass().getName());
-				}
 				new UsernameTokenInterceptor().handleMessage(soap);
 			}catch(Exception e) {
 				e.printStackTrace();
 			}
 			
-			soap.setInterceptorChain(null);
+			soap.setInterceptorChain(null);*/
 			soapResponse = in.handleMessage(soap);
 		} else {
 			soapResponse = in.handleMessage(soap);
@@ -103,15 +107,36 @@ public class PrimaryMessageBus {
 	}
 	
 	private SoapMessage processMessage(byte[] msg) {
+		
+		Bus bus = new ExtensionManagerBus();
+        Service service = new ServiceImpl();
+        EndpointInfo ei = new EndpointInfo();
+        ei.setAddress("http://nowhere.com/bar/foo");
+        
+        Endpoint endpoint = null;
+        try {
+			endpoint = new EndpointImpl(bus, service, ei);
+		} catch (EndpointException e) {
+			e.printStackTrace();
+		}
+        
 		PhaseInterceptorChain chain = new PhaseInterceptorChain(
 				new PhaseManagerImpl().getInPhases());
 		Message m = new MessageImpl();
 		m.setInterceptorChain(chain);
+		
 		Exchange exchange = new ExchangeImpl();
 		exchange.setInMessage(m);
+		exchange.put(Bus.class, bus);
+		exchange.put(Service.class, service);
+		exchange.put(Endpoint.class, endpoint);
+		
 		m.setExchange(exchange);
 		m.setContent(XMLStreamReader.class,
 				StaxUtils.createXMLStreamReader(new ByteArrayInputStream(msg)));	
+		m.put(Message.REQUESTOR_ROLE, new Boolean(false));
+		m.put(Message.INBOUND_MESSAGE, new Boolean(true));
+		//m.put(SoapMessage.HTTP_REQUEST_METHOD, request.);
 		
 		SoapMessage message = new SoapMessage(m);
 

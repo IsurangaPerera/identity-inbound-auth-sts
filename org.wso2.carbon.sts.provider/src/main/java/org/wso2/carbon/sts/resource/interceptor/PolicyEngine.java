@@ -11,10 +11,12 @@ import javax.xml.namespace.QName;
 
 import org.apache.cxf.interceptor.Interceptor;
 import org.apache.cxf.message.Message;
+import org.apache.cxf.ws.policy.AssertionInfoMap;
 import org.apache.cxf.ws.policy.Assertor;
 import org.apache.cxf.ws.policy.PolicyInterceptorProvider;
 import org.apache.cxf.ws.policy.PolicyInterceptorProviderRegistry;
 import org.apache.cxf.ws.policy.PolicyInterceptorProviderRegistryImpl;
+import org.apache.cxf.ws.policy.PolicyVerificationInInterceptor;
 import org.apache.cxf.ws.security.policy.interceptors.HttpsTokenInterceptorProvider;
 import org.apache.cxf.ws.security.policy.interceptors.IssuedTokenInterceptorProvider;
 import org.apache.cxf.ws.security.policy.interceptors.KerberosTokenInterceptorProvider;
@@ -30,7 +32,9 @@ import org.apache.neethi.PolicyComponent;
 import org.apache.neethi.PolicyContainingAssertion;
 
 public class PolicyEngine {
+	
 	static PolicyInterceptorProviderRegistry reg = new PolicyInterceptorProviderRegistryImpl();
+	static Collection<Assertion> assertions = new ArrayList<Assertion>();
 	static PolicyEngine instance = new PolicyEngine();
 
 	private PolicyEngine() {
@@ -55,9 +59,11 @@ public class PolicyEngine {
 			initialiseInterceptors(out, a, m);
 		}
 		
-		for (Interceptor<? extends Message> i : out) {
-			m.getInterceptorChain().add(i);
-		}
+		m.getInterceptorChain().add(out);
+        if (!assertions.isEmpty()) {
+            m.put(AssertionInfoMap.class, new AssertionInfoMap(assertions));
+            m.getInterceptorChain().add(PolicyVerificationInInterceptor.INSTANCE);
+        }
 	}
 
 	static void initialiseInterceptors(
@@ -87,6 +93,7 @@ public class PolicyEngine {
 				alternatives.addAll(alternative);
 			}
 		}
+		assertions.addAll(alternatives);
 		return alternatives;
 	}
 

@@ -19,7 +19,6 @@
 		<module>org.wso2.carbon.sts.store</module>
 		<module>org.wso2.carbon.sts.claim.mgt</module>
 		<module>org.wso2.carbon.sts.provider</module>
-		<module>features/org.wso2.carbon.sts.provider.feature</module>
 		<module>org.wso2.sts.security.provider</module>
 	</modules>
 
