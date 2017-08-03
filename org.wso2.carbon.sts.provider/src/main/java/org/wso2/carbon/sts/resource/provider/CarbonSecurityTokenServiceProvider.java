@@ -194,28 +194,6 @@ public class CarbonSecurityTokenServiceProvider implements Provider<Source> {
 
 
     public Source invoke(Source request) {
-    	////Test Code Starts Here
-    	//System.out.println(context.getUserPrincipal().getName());
-    	 
-    	/*WSDLDefinitionBuilder builder = new WSDLDefinitionBuilder();
-    	Definition wsdlDefinition = builder.build("ws-trust-1.4-service.wsdl");
-    	Service f = new Service(wsdlDefinition.createService());
-    	new EndpointPolicyImpl();
-    	new PolicyEngineImpl();
-    	new EffectivePolicyImpl();
-    	Message m = PhaseInterceptorChain.getCurrentMessage();
-    	System.out.println("hghjg");
-    	//System.out.println(m.getExchange().getService().getName().getLocalPart());
-    	for(String b : m.getExchange().getEndpoint().getEndpointInfo().getProperties().keySet()) {
-    		System.out.println(b);
-    		//m.getExchange().getService().get(m).getClass().getName();
-    	}
-    	System.out.println("Binding");
-    	for(String b : m.getExchange().getEndpoint().getEndpointInfo().getBinding().getProperties().keySet()) {
-    		System.out.println(b);
-    		//m.getExchange().getService().get(m).getClass().getName();
-    	}*/
-    	////////////////////////////////////////////////////////
         Source response = null;
         try {
             Object obj = convertToJAXBObject(request);

@@ -145,7 +145,7 @@ public class DefaultSecurityTokenServiceProvider extends CarbonSecurityTokenServ
         stsProperties.setEncryptionUsername("myservicekey");
         stsProperties.setSignatureUsername("mystskey");
         stsProperties.setCallbackHandler(new PasswordCallbackHandler());
-        stsProperties.setIssuer("STS");
+        stsProperties.setIssuer("wso2-sts");
         
         abstractOperation.setStsProperties(stsProperties);
         abstractOperation.setEncryptIssuedToken(encryptIssuedToken);

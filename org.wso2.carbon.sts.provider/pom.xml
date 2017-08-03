@@ -124,8 +124,8 @@
 		</import.package>
 		<dynamic.import.package>*</dynamic.import.package>
 		<carbon.component>
-			osgi.service;
-			objectClass="org.wso2.msf4j.Microservice";serviceCount="1"
+			osgi.service;objectClass="org.wso2.msf4j.Interceptor";serviceCount="1",
+			osgi.service;objectClass="org.wso2.msf4j.Microservice";serviceCount="1"
 		</carbon.component>
 		<Embed-Dependency>*;scope=!provided|!test;inline=false</Embed-Dependency>
 		<Embed-Directory>target/dependency</Embed-Directory>
