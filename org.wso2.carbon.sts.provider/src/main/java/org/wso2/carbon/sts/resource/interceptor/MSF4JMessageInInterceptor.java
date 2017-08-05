@@ -2,7 +2,6 @@ package org.wso2.carbon.sts.resource.interceptor;
 
 import java.io.ByteArrayInputStream;
 import java.nio.ByteBuffer;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.xml.namespace.QName;
@@ -12,10 +11,10 @@ import javax.xml.stream.XMLStreamReader;
 import javax.xml.transform.Source;
 import javax.xml.transform.dom.DOMSource;
 
+import org.apache.cxf.binding.soap.SoapFault;
 import org.apache.cxf.binding.soap.SoapMessage;
 import org.apache.cxf.binding.soap.saaj.SAAJInInterceptor;
 import org.apache.cxf.bus.managers.PhaseManagerImpl;
-import org.apache.cxf.endpoint.EndpointException;
 import org.apache.cxf.headers.Header;
 import org.apache.cxf.interceptor.InterceptorChain;
 import org.apache.cxf.message.Exchange;
@@ -24,7 +23,6 @@ import org.apache.cxf.message.MessageImpl;
 import org.apache.cxf.staxutils.StaxUtils;
 import org.apache.cxf.ws.policy.PolicyConstants;
 import org.apache.cxf.ws.policy.PolicyInInterceptor;
-import org.apache.cxf.ws.security.SecurityConstants;
 import org.apache.neethi.Policy;
 import org.osgi.service.component.annotations.Component;
 import org.w3c.dom.Node;
@@ -32,6 +30,7 @@ import org.w3c.dom.NodeList;
 import org.wso2.carbon.sts.resource.WSContext;
 import org.wso2.carbon.sts.resource.internal.DataHolder;
 import org.wso2.carbon.sts.resource.provider.PasswordCallbackHandler;
+import org.wso2.carbon.sts.resource.utils.SOAPUtils;
 import org.wso2.msf4j.Interceptor;
 import org.wso2.msf4j.Request;
 import org.wso2.msf4j.Response;
@@ -46,8 +45,13 @@ import org.wso2.msf4j.util.BufferUtil;
 public class MSF4JMessageInInterceptor implements Interceptor {
 	
 	public static final String METHOD = "org.wso2.carbon.sts.resource.STSResource";
+    
+	public static final String WST_NS_05_12 = "http://docs.oasis-open.org/ws-sx/ws-trust/200512";
+    public static final QName FAILED_AUTH = new QName(WST_NS_05_12, "FailedAuthentication");
+    public static final QName INVALID_REQUEST = new QName(WST_NS_05_12, "InvalidRequest");
+
 	
-	SAAJInInterceptor saajIn = new SAAJInInterceptor();
+    SAAJInInterceptor saajIn = new SAAJInInterceptor();
 
 	@Override
 	public void postCall(Request request, int status, ServiceMethodInfo serviceMethodInfo)
@@ -57,7 +61,7 @@ public class MSF4JMessageInInterceptor implements Interceptor {
 
 	@Override
 	public boolean preCall(Request request, Response response, ServiceMethodInfo smi)
-			throws Exception {
+			throws SoapFault {
 		if(METHOD.equals(smi.getMethodName())) {
 			Policy policy = DataHolder.getInstance().getPolicy();
 			SoapMessage message = processMessage(request);
@@ -65,26 +69,31 @@ public class MSF4JMessageInInterceptor implements Interceptor {
 			
 			message.put(Message.REQUESTOR_ROLE, Boolean.FALSE);
 			message.put(Message.INBOUND_MESSAGE, new Boolean(true));
-			message.put(SoapMessage.HTTP_REQUEST_METHOD, request.getHttpMethod());
-			
+			message.put(SoapMessage.HTTP_REQUEST_METHOD,
+					request.getHttpMethod());
+
 			request.setProperty(Source.class.getName(), getSource(message));
-			
+
 			if (!policy.isEmpty()) {
 				PolicyInInterceptor pi = new PolicyInInterceptor();
 				InterceptorChain chain = message.getInterceptorChain();
 				chain.add(pi);
 				chain.doIntercept(message);
-				System.out.println(message.getContent(Exception.class).getMessage());
 
-				/*chain.add(new PolicyBasedWSS4JStaxInInterceptor());
-				boolean state = chain.doIntercept(message);
-				System.out.println(state);*/		
-			} 
+				if (message.getContent(Exception.class) != null) {
+					SoapFault fault = new SoapFault(message.getContent(
+							Exception.class).getMessage(), FAILED_AUTH);
+
+					response.setEntity(SOAPUtils.getInstance().soapToString(
+							SOAPUtils.getInstance().createSoapFault(fault)));
+					response.send();
+				}
+			}
 		}
 		return true;
 	}
 	
-	private SoapMessage processMessage(Request request) throws EndpointException {
+	private SoapMessage processMessage(Request request) {
 		List<ByteBuffer> fullMessageBody = request.getFullMessageBody();
 		ByteBuffer buffer = BufferUtil.merge(fullMessageBody);
 
@@ -102,7 +111,7 @@ public class MSF4JMessageInInterceptor implements Interceptor {
 		return new SoapMessage(m);
 	}
 
-	private void setExtensions(Message m) throws EndpointException {
+	private void setExtensions(Message m) {
 
 		Exchange ex = DataHolder.getInstance().getExchange();
 		ex.getEndpoint()
@@ -122,12 +131,16 @@ public class MSF4JMessageInInterceptor implements Interceptor {
 		m.setExchange(ex);
 	}
 
-	private Source getSource(SoapMessage message) throws SOAPException {
+	private Source getSource(SoapMessage message) {
 		SOAPMessage soapMessage = message.getContent(SOAPMessage.class);
 		if (soapMessage == null) {
 			saajIn.handleMessage(message);
 			soapMessage = message.getContent(SOAPMessage.class);
 		}
+		
+		DOMSource source = null;
+		
+		try {
 
 		NodeList it = soapMessage.getSOAPHeader().getChildNodes();
 
@@ -141,8 +154,11 @@ public class MSF4JMessageInInterceptor implements Interceptor {
 
 		}
 
-		DOMSource source = new DOMSource(soapMessage.getSOAPBody()
+		source = new DOMSource(soapMessage.getSOAPBody()
 				.extractContentAsDocument());
+		}catch(SOAPException e) {
+			throw new SoapFault(e.getMessage(), INVALID_REQUEST);
+		}
 
 		return source;
 	}

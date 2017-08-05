@@ -10,6 +10,8 @@ import javax.xml.ws.WebServiceContext;
 import javax.xml.ws.handler.MessageContext;
 import javax.xml.ws.handler.MessageContext.Scope;
 
+import org.apache.cxf.binding.soap.Soap12;
+import org.apache.cxf.binding.soap.SoapVersion;
 import org.apache.cxf.jaxws.context.WebServiceContextImpl;
 import org.apache.cxf.jaxws.context.WrappedMessageContext;
 import org.apache.cxf.message.Message;
@@ -49,6 +51,7 @@ public class WSContext {
 				createSecurityContext(principal));
 		msgCtx.put(MessageContext.HTTP_REQUEST_HEADERS, headerMap);
 		msgCtx.put(MessageContext.HTTP_REQUEST_METHOD, request.getHttpMethod());
+		msgCtx.put(SoapVersion.class.getName(), Soap12.getInstance());
 		msgCtx.setScope(MessageContext.HTTP_REQUEST_HEADERS, Scope.APPLICATION);
 
 		WebServiceContext context = new WebServiceContextImpl(msgCtx);

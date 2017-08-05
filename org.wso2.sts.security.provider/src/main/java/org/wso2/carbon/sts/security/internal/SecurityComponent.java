@@ -9,7 +9,17 @@ import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
-import org.apache.neethi.PolicyBuilder;
+import org.apache.cxf.Bus;
+import org.apache.cxf.bus.extension.ExtensionManagerBus;
+import org.apache.cxf.ws.policy.AssertionBuilderRegistry;
+import org.apache.cxf.ws.policy.AssertionBuilderRegistryImpl;
+import org.apache.cxf.ws.policy.PolicyBuilder;
+import org.apache.cxf.ws.policy.PolicyBuilderImpl;
+import org.apache.cxf.ws.policy.PolicyEngine;
+import org.apache.cxf.ws.policy.PolicyEngineImpl;
+import org.apache.cxf.ws.policy.PolicyInterceptorProviderRegistry;
+import org.apache.cxf.ws.policy.PolicyInterceptorProviderRegistryImpl;
+import org.apache.cxf.ws.security.policy.WSSecurityPolicyLoader;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.component.annotations.Activate;
@@ -32,8 +42,28 @@ public class SecurityComponent {
 
 	@Activate
 	protected void start(BundleContext bundleContext) throws Exception {
+		
+		Bus bus = new ExtensionManagerBus();
+		bus.setExtension(new AssertionBuilderRegistryImpl(),
+				AssertionBuilderRegistry.class);
+		bus.setExtension(new PolicyInterceptorProviderRegistryImpl(),
+				PolicyInterceptorProviderRegistry.class);
 
-		PolicyBuilder builder = new PolicyBuilder();
+		bus.setExtension(new PolicyEngineImpl(bus), PolicyEngine.class);
+
+		@SuppressWarnings("unused")
+		PolicyBuilderImpl pb = new PolicyBuilderImpl(bus);
+
+		AssertionBuilderRegistryImpl reg = (AssertionBuilderRegistryImpl) bus
+				.getExtension(AssertionBuilderRegistry.class);
+		reg.setBus(bus);
+
+		pb = new PolicyBuilderImpl(bus);
+
+		@SuppressWarnings("unused")
+		WSSecurityPolicyLoader loader = new WSSecurityPolicyLoader(bus);
+
+		PolicyBuilder builder = bus.getExtension(PolicyBuilder.class);;
 		XMLStreamReader streamReader = null;
 
 		URL resource = bundleContext.getBundle().getResource(

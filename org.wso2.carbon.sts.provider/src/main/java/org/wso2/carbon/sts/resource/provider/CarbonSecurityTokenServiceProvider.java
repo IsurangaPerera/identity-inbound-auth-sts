@@ -24,6 +24,7 @@ import javax.xml.ws.handler.MessageContext;
 
 import org.apache.cxf.binding.soap.SoapFault;
 import org.apache.cxf.binding.soap.SoapVersion;
+import org.apache.cxf.binding.soap.SoapVersionFactory;
 import org.apache.cxf.common.jaxb.JAXBContextCache;
 import org.apache.cxf.common.jaxb.JAXBContextCache.CachedContextAndSchemas;
 import org.apache.cxf.common.util.ReflectionUtil;
