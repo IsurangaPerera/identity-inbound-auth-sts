@@ -28,7 +28,6 @@ import org.apache.cxf.staxutils.StaxUtils;
 import org.apache.cxf.ws.policy.PolicyConstants;
 import org.apache.cxf.ws.policy.PolicyInInterceptor;
 import org.osgi.service.component.annotations.Component;
-import org.wso2.carbon.messaging.Header;
 import org.wso2.carbon.sts.resource.internal.DataHolder;
 import org.wso2.carbon.sts.resource.provider.PasswordCallbackHandler;
 import org.wso2.carbon.sts.resource.utils.SOAPUtils;
@@ -45,21 +44,24 @@ import org.wso2.msf4j.util.BufferUtil;
         immediate = true
 )
 public class MSF4JMessageInInterceptor implements Interceptor {
-	
+
 	public static final String METHOD = "org.wso2.carbon.sts.resource.STSResource";
-    
+
 	public static final String WST_NS_05_12 = "http://docs.oasis-open.org/ws-sx/ws-trust/200512";
-    public static final QName FAILED_AUTH = new QName(WST_NS_05_12, "FailedAuthentication");
-    public static final QName INVALID_REQUEST = new QName(WST_NS_05_12, "InvalidRequest");
+	public static final QName FAILED_AUTH = new QName(WST_NS_05_12,
+			"FailedAuthentication");
+	public static final QName INVALID_REQUEST = new QName(WST_NS_05_12,
+			"InvalidRequest");
 
 	@Override
-	public void postCall(Request request, int status, ServiceMethodInfo serviceMethodInfo)
-			throws Exception {
-		
-		/*SoapHeaderOutFilterInterceptor();	
-		SoapPreProtocolOutInterceptor();
-		SoapOutInterceptor();*/
-		
+	public void postCall(Request request, int status,
+			ServiceMethodInfo serviceMethodInfo) throws Exception {
+
+		/*
+		 * SoapHeaderOutFilterInterceptor(); SoapPreProtocolOutInterceptor();
+		 * SoapOutInterceptor();
+		 */
+
 	}
 
 	@Override
@@ -67,11 +69,11 @@ public class MSF4JMessageInInterceptor implements Interceptor {
 			ServiceMethodInfo smi) throws SoapFault {
 
 		if (METHOD.equals(smi.getMethodName())) {
-			
+
 			SAAJInInterceptor saajIn = new SAAJInInterceptor();
 			boolean faultExist = false;
 			DOMSource source = null;
-			
+
 			SoapMessage message = processMessage(request);
 			WSContext.getInstance().buildWebServiceContext(request, message);
 
@@ -119,15 +121,15 @@ public class MSF4JMessageInInterceptor implements Interceptor {
 					// log here
 				}
 			}
-			
-			if(faultExist) {
+
+			if (faultExist) {
 				response.send();
 				return false;
 			}
 		}
 		return true;
 	}
-	
+
 	private SoapMessage processMessage(Request request) {
 		List<ByteBuffer> fullMessageBody = request.getFullMessageBody();
 		ByteBuffer buffer = BufferUtil.merge(fullMessageBody);
@@ -157,10 +159,11 @@ public class MSF4JMessageInInterceptor implements Interceptor {
 				.getEndpointInfo()
 				.setProperty(PolicyConstants.POLICY_OVERRIDE,
 						DataHolder.getInstance().getPolicy());
-		/*ex.getEndpoint()
-				.getEndpointInfo()
-				.setProperty(SecurityConstants.ENABLE_STREAMING_SECURITY,
-						Boolean.TRUE);*/
+		/*
+		 * ex.getEndpoint() .getEndpointInfo()
+		 * .setProperty(SecurityConstants.ENABLE_STREAMING_SECURITY,
+		 * Boolean.TRUE);
+		 */
 
 		PhaseInterceptorChain chain = new PhaseInterceptorChain(
 				new PhaseManagerImpl().getInPhases());
@@ -169,5 +172,5 @@ public class MSF4JMessageInInterceptor implements Interceptor {
 		ex.setInMessage(m);
 		m.setExchange(ex);
 	}
-	
+
 }

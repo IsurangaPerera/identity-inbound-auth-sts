@@ -12,7 +12,6 @@ import javax.ws.rs.core.MediaType;
 import javax.xml.transform.Source;
 
 import org.apache.cxf.binding.soap.SoapFault;
-import org.apache.cxf.jaxws.JaxwsServiceBuilder;
 import org.osgi.service.component.annotations.Component;
 import org.wso2.carbon.sts.resource.provider.DefaultSecurityTokenServiceProvider;
 import org.wso2.carbon.sts.resource.utils.SOAPUtils;
@@ -20,7 +19,6 @@ import org.wso2.carbon.sts.resource.utils.WSContext;
 import org.wso2.msf4j.Microservice;
 import org.wso2.msf4j.Request;
 import org.wso2.msf4j.Response;
-
 
 @Component(
      name = "org.wso2.carbon.sts.resources.STSResource",
@@ -37,7 +35,7 @@ import org.wso2.msf4j.Response;
 @Path("/services")
 public class STSResource extends AbstractResource {
 	
-	SOAPUtils instance = SOAPUtils.getInstance();
+	private SOAPUtils instance = SOAPUtils.getInstance();
 	
 	@POST
 	@Path("/wso2carbon-sts")
@@ -57,7 +55,8 @@ public class STSResource extends AbstractResource {
 			response.setEntity(m);
 		
 		} catch (SoapFault fault) {
-			response.setEntity(instance.soapToString(instance.createSoapFault(fault)));
+			response.setEntity(instance.soapToString(instance
+					.createSoapFault(fault)));
 		} catch (Exception e) {
 			//log here
 		}
