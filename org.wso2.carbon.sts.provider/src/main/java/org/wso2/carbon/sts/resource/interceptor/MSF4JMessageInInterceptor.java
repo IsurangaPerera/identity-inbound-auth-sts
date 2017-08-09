@@ -13,9 +13,13 @@ import javax.xml.transform.dom.DOMSource;
 
 import org.apache.cxf.binding.soap.SoapFault;
 import org.apache.cxf.binding.soap.SoapMessage;
+import org.apache.cxf.binding.soap.interceptor.CheckFaultInterceptor;
+import org.apache.cxf.binding.soap.interceptor.MustUnderstandInterceptor;
+import org.apache.cxf.binding.soap.interceptor.ReadHeadersInterceptor;
+import org.apache.cxf.binding.soap.interceptor.SoapActionInInterceptor;
+import org.apache.cxf.binding.soap.interceptor.StartBodyInterceptor;
 import org.apache.cxf.binding.soap.saaj.SAAJInInterceptor;
 import org.apache.cxf.bus.managers.PhaseManagerImpl;
-import org.apache.cxf.headers.Header;
 import org.apache.cxf.interceptor.InterceptorChain;
 import org.apache.cxf.message.Exchange;
 import org.apache.cxf.message.Message;
@@ -23,14 +27,12 @@ import org.apache.cxf.message.MessageImpl;
 import org.apache.cxf.staxutils.StaxUtils;
 import org.apache.cxf.ws.policy.PolicyConstants;
 import org.apache.cxf.ws.policy.PolicyInInterceptor;
-import org.apache.neethi.Policy;
 import org.osgi.service.component.annotations.Component;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.wso2.carbon.sts.resource.WSContext;
+import org.wso2.carbon.messaging.Header;
 import org.wso2.carbon.sts.resource.internal.DataHolder;
 import org.wso2.carbon.sts.resource.provider.PasswordCallbackHandler;
 import org.wso2.carbon.sts.resource.utils.SOAPUtils;
+import org.wso2.carbon.sts.resource.utils.WSContext;
 import org.wso2.msf4j.Interceptor;
 import org.wso2.msf4j.Request;
 import org.wso2.msf4j.Response;
@@ -50,44 +52,77 @@ public class MSF4JMessageInInterceptor implements Interceptor {
     public static final QName FAILED_AUTH = new QName(WST_NS_05_12, "FailedAuthentication");
     public static final QName INVALID_REQUEST = new QName(WST_NS_05_12, "InvalidRequest");
 
-	
-    SAAJInInterceptor saajIn = new SAAJInInterceptor();
-
 	@Override
 	public void postCall(Request request, int status, ServiceMethodInfo serviceMethodInfo)
 			throws Exception {
 		
+		/*SoapHeaderOutFilterInterceptor();	
+		SoapPreProtocolOutInterceptor();
+		SoapOutInterceptor();*/
+		
 	}
 
 	@Override
-	public boolean preCall(Request request, Response response, ServiceMethodInfo smi)
-			throws SoapFault {
-		if(METHOD.equals(smi.getMethodName())) {
-			Policy policy = DataHolder.getInstance().getPolicy();
+	public boolean preCall(Request request, Response response,
+			ServiceMethodInfo smi) throws SoapFault {
+
+		if (METHOD.equals(smi.getMethodName())) {
+			
+			SAAJInInterceptor saajIn = new SAAJInInterceptor();
+			boolean faultExist = false;
+			DOMSource source = null;
+			
 			SoapMessage message = processMessage(request);
 			WSContext.getInstance().buildWebServiceContext(request, message);
-			
+
 			message.put(Message.REQUESTOR_ROLE, Boolean.FALSE);
-			message.put(Message.INBOUND_MESSAGE, new Boolean(true));
+			message.put(Message.INBOUND_MESSAGE, Boolean.TRUE);
 			message.put(SoapMessage.HTTP_REQUEST_METHOD,
 					request.getHttpMethod());
+			message.put(Message.CONTENT_TYPE, request.getContentType());
+			message.put("endpoint-processes-headers",
+					"{http://cxf.apache.org/outofband/Header}outofbandHeader");
 
-			request.setProperty(Source.class.getName(), getSource(message));
+			InterceptorChain chain = message.getInterceptorChain();
 
-			if (!policy.isEmpty()) {
-				PolicyInInterceptor pi = new PolicyInInterceptor();
-				InterceptorChain chain = message.getInterceptorChain();
-				chain.add(pi);
-				chain.doIntercept(message);
+			chain.add((org.apache.cxf.interceptor.Interceptor<? extends Message>) saajIn
+					.getAdditionalInterceptors().iterator().next());
+			chain.add(new ReadHeadersInterceptor(message.getExchange().getBus()));
+			chain.add(new MustUnderstandInterceptor());
+			chain.add(new SoapActionInInterceptor());
+			chain.add(new CheckFaultInterceptor());
+			chain.add(new StartBodyInterceptor());
+			chain.add(new PolicyInInterceptor());
+			chain.add(saajIn);
 
-				if (message.getContent(Exception.class) != null) {
-					SoapFault fault = new SoapFault(message.getContent(
-							Exception.class).getMessage(), FAILED_AUTH);
+			chain.doIntercept(message);
 
-					response.setEntity(SOAPUtils.getInstance().soapToString(
-							SOAPUtils.getInstance().createSoapFault(fault)));
-					response.send();
+			if (message.getContent(Exception.class) != null) {
+				SoapFault fault = new SoapFault(message.getContent(
+						Exception.class).getMessage(), FAILED_AUTH);
+
+				response.setEntity(SOAPUtils.getInstance().soapToString(
+						SOAPUtils.getInstance().createSoapFault(fault)));
+
+				faultExist = true;
+			}
+
+			if (!faultExist) {
+
+				try {
+					source = new DOMSource(message
+							.getContent(SOAPMessage.class).getSOAPBody()
+							.extractContentAsDocument());
+					request.setProperty(Source.class.getName(), source);
+				} catch (SOAPException e) {
+					faultExist = true;
+					// log here
 				}
+			}
+			
+			if(faultExist) {
+				response.send();
+				return false;
 			}
 		}
 		return true;
@@ -122,6 +157,10 @@ public class MSF4JMessageInInterceptor implements Interceptor {
 				.getEndpointInfo()
 				.setProperty(PolicyConstants.POLICY_OVERRIDE,
 						DataHolder.getInstance().getPolicy());
+		/*ex.getEndpoint()
+				.getEndpointInfo()
+				.setProperty(SecurityConstants.ENABLE_STREAMING_SECURITY,
+						Boolean.TRUE);*/
 
 		PhaseInterceptorChain chain = new PhaseInterceptorChain(
 				new PhaseManagerImpl().getInPhases());
@@ -130,36 +169,5 @@ public class MSF4JMessageInInterceptor implements Interceptor {
 		ex.setInMessage(m);
 		m.setExchange(ex);
 	}
-
-	private Source getSource(SoapMessage message) {
-		SOAPMessage soapMessage = message.getContent(SOAPMessage.class);
-		if (soapMessage == null) {
-			saajIn.handleMessage(message);
-			soapMessage = message.getContent(SOAPMessage.class);
-		}
-		
-		DOMSource source = null;
-		
-		try {
-
-		NodeList it = soapMessage.getSOAPHeader().getChildNodes();
-
-		for (int i = 0; i < it.getLength(); i++) {
-			if (it.item(i).getLocalName() != null) {
-				Node n = it.item(i);
-				QName q = new QName(n.getNamespaceURI(), n.getLocalName());
-				Header header = new Header(q, n);
-				message.getHeaders().add(header);
-			}
-
-		}
-
-		source = new DOMSource(soapMessage.getSOAPBody()
-				.extractContentAsDocument());
-		}catch(SOAPException e) {
-			throw new SoapFault(e.getMessage(), INVALID_REQUEST);
-		}
-
-		return source;
-	}
+	
 }

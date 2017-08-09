@@ -30,6 +30,7 @@ import org.apache.cxf.service.Service;
 import org.apache.cxf.service.model.BindingOperationInfo;
 import org.apache.cxf.service.model.OperationInfo;
 import org.apache.cxf.transport.MessageObserver;
+import org.apache.cxf.ws.security.wss4j.WSS4JStaxInInterceptor;
 
 /**
  * A PhaseInterceptorChain orders Interceptors according to the phase they
@@ -287,6 +288,8 @@ public class PhaseInterceptorChain implements InterceptorChain {
                     if (isFineLogging) {
                         LOG.fine("Invoking handleMessage on interceptor " + currentInterceptor);
                     }
+                    
+                    System.out.println(message.get(WSS4JStaxInInterceptor.SECURITY_PROCESSED));
                     System.out.println("-----------" + currentInterceptor);
                     currentInterceptor.handleMessage(message);
                     if (state == State.SUSPENDED) {

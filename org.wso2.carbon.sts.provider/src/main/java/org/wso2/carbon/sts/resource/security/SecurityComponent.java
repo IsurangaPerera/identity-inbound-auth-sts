@@ -57,12 +57,6 @@ public class SecurityComponent {
 				} catch (FileNotFoundException | XMLStreamException e) {
 
 				}
-				//new TransportBindingBuilder()
-				//new AssertionBuilderFactoryImpl()
-				//new SupportingTokensBuilder()
-				//new AsymmetricBindingBuilder()
-				//new PolicyBuilderImpl()
-				//new ConfiguredBeanLocator()
 				
 				try {
 					scenario.setPolicy(builder.getPolicy(streamReader));

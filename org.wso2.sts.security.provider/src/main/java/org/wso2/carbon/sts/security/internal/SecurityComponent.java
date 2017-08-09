@@ -63,7 +63,7 @@ public class SecurityComponent {
 		@SuppressWarnings("unused")
 		WSSecurityPolicyLoader loader = new WSSecurityPolicyLoader(bus);
 
-		PolicyBuilder builder = bus.getExtension(PolicyBuilder.class);;
+		PolicyBuilder builder = bus.getExtension(PolicyBuilder.class);
 		XMLStreamReader streamReader = null;
 
 		URL resource = bundleContext.getBundle().getResource(
