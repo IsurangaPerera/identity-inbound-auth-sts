@@ -29,7 +29,6 @@ import org.apache.cxf.ws.policy.PolicyConstants;
 import org.apache.cxf.ws.policy.PolicyInInterceptor;
 import org.osgi.service.component.annotations.Component;
 import org.wso2.carbon.sts.resource.internal.DataHolder;
-import org.wso2.carbon.sts.resource.provider.PasswordCallbackHandler;
 import org.wso2.carbon.sts.resource.utils.SOAPUtils;
 import org.wso2.carbon.sts.resource.utils.WSContext;
 import org.wso2.msf4j.Interceptor;

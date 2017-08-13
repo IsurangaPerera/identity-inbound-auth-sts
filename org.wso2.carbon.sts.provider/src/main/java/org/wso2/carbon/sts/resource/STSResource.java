@@ -10,10 +10,15 @@ import javax.ws.rs.Path;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.xml.transform.Source;
+import javax.xml.ws.Provider;
 
 import org.apache.cxf.binding.soap.SoapFault;
 import org.osgi.service.component.annotations.Component;
-import org.wso2.carbon.sts.resource.provider.DefaultSecurityTokenServiceProvider;
+import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferenceCardinality;
+import org.osgi.service.component.annotations.ReferencePolicy;
+import org.wso2.carbon.sts.provider2.provider.DefaultSecurityTokenServiceProvider;
+import org.wso2.carbon.sts.resource.internal.DataHolder;
 import org.wso2.carbon.sts.resource.utils.SOAPUtils;
 import org.wso2.carbon.sts.resource.utils.WSContext;
 import org.wso2.msf4j.Microservice;
@@ -44,7 +49,7 @@ public class STSResource extends AbstractResource {
 	public void processRequest(@Context Request request, @Context Response response) {
 
 		try {
-			DefaultSecurityTokenServiceProvider provider = new DefaultSecurityTokenServiceProvider();
+			DefaultSecurityTokenServiceProvider provider = DataHolder.getInstance().getServiceProvider();
 			provider.setWebServiceContext(WSContext.getInstance()
 					.getWSContext());
 			Source resp = provider.invoke((Source) request
@@ -63,6 +68,23 @@ public class STSResource extends AbstractResource {
 		
 		response.send();
 	}
+	
+	@Reference(
+	        name = "provider",
+	        service = Provider.class,
+	        cardinality = ReferenceCardinality.MANDATORY,
+	        policy = ReferencePolicy.DYNAMIC,
+	        unbind = "removePolicy"
+		)
+		public void addServiceProvider(Provider provider) {
+			
+			DataHolder.getInstance().setServiceProvider(((DefaultSecurityTokenServiceProvider)provider));
+		}
+		
+		public void removePolicy(Provider provider) {
+			
+			DataHolder.getInstance().setServiceProvider(null);
+		}
 	
 	/*@Reference(
         name = "policy",
