@@ -1,0 +1,73 @@
+<?xml version="1.0"?>
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.wso2.carbon.sts</groupId>
+		<artifactId>identity-inbound-auth-sts</artifactId>
+		<version>1.0.0</version>
+	</parent>
+	<artifactId>org.wso2.carbon.sts.samples</artifactId>
+	<packaging>bundle</packaging>
+	<name>org.wso2.carbon.sts.samples</name>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.wso2.carbon.sts</groupId>
+			<artifactId>org.wso2.carbon.sts.cxf</artifactId>
+			<version>1.0.0</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.wso2.eclipse.osgi</groupId>
+			<artifactId>org.eclipse.osgi.services</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.wso2.eclipse.osgi</groupId>
+			<artifactId>org.eclipse.osgi</artifactId>
+			<version>3.10.2.v20150203-1939</version>
+			<scope>provided</scope>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>1.8</source>
+					<target>1.8</target>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.felix</groupId>
+				<artifactId>maven-bundle-plugin</artifactId>
+				<version>3.3.0</version>
+				<extensions>true</extensions>
+			</plugin>
+		</plugins>
+	</build>
+
+	<properties>
+		<export.package>
+			org.wso2.carbon.sts.samples.*,
+		</export.package>
+		<import.package>
+			org.osgi.framework.*;version="${osgi.framework.import.version.range}",
+			org.apache.log4j.*,
+			org.apache.wss4j.common.crypto.*,
+			org.apache.cxf.sts.*,
+			org.apache.wss4j.common.ext.*,
+			org.apache.wss4j.crypto.*,
+        	org.apache.wss4j.crypto.merlin.keystore.*,
+		</import.package>
+	</properties>
+
+</project>
