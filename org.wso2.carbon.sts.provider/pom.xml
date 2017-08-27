@@ -65,6 +65,8 @@
 			org.apache.cxf.ws.security.tokenstore.*,
 			org.apache.cxf.sts.token.validator.*,
 			org.apache.wss4j.common.ext.*,
+			org.apache.wss4j.common.crypto.*,
+			org.apache.wss4j.common.ext.*,
 			org.apache.cxf.sts.token.renewer.*,
 			org.apache.cxf.sts.token.provider.*,
 			org.apache.cxf.sts.service.*,

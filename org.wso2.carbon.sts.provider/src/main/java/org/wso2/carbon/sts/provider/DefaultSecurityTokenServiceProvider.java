@@ -2,7 +2,6 @@ package org.wso2.carbon.sts.provider;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 
 import javax.xml.transform.Source;
 import javax.xml.ws.Provider;
@@ -135,20 +134,6 @@ public class DefaultSecurityTokenServiceProvider extends CarbonSecurityTokenServ
         abstractOperation.setTokenProviders(tokenProviders);
         abstractOperation.setTokenValidators(tokenValidators);
         
-        /*STSPropertiesMBean stsProperties = new StaticSTSProperties();
-        Crypto crypto = null;
-		try {
-			crypto = CryptoFactory.getInstance(getEncryptionProperties());
-		} catch (WSSecurityException e) {
-			e.printStackTrace();
-		}
-        stsProperties.setEncryptionCrypto(crypto);
-        stsProperties.setSignatureCrypto(crypto);
-        stsProperties.setEncryptionUsername("myservicekey");
-        stsProperties.setSignatureUsername("mystskey");
-        stsProperties.setCallbackHandler(new PasswordCallbackHandler());
-        stsProperties.setIssuer("wso2-sts");*/
-        
 		abstractOperation.setStsProperties(DataHolder.getInstance()
 				.getStaticPropertyBean());
 		abstractOperation.setEncryptIssuedToken(encryptIssuedToken);
@@ -157,17 +142,6 @@ public class DefaultSecurityTokenServiceProvider extends CarbonSecurityTokenServ
 		abstractOperation.setTokenStore(tokenStore);
 		abstractOperation.setClaimsManager(claimsManager);
 		abstractOperation.setEventListener(eventListener);
-    }
-    
-    private Properties getEncryptionProperties() {
-        Properties properties = new Properties();
-        properties.put(
-            "org.apache.wss4j.crypto.provider", "org.apache.wss4j.common.crypto.Merlin"
-        );
-        properties.put("org.apache.wss4j.crypto.merlin.keystore.password", "stsspass");
-        properties.put("org.apache.wss4j.crypto.merlin.keystore.file", "stsstore.jks");
-
-        return properties;
     }
     
     @Reference(
