@@ -15,12 +15,12 @@
 	<packaging>pom</packaging>
 
 	<modules>
-		<module>org.wso2.carbon.sts.store</module>
-		<module>org.wso2.carbon.sts.claim.mgt</module>
 		<module>org.wso2.carbon.sts.provider</module>
-		<module>org.wso2.sts.security.provider</module>
-    <module>org.wso2.carbon.sts.provider2</module>
-  </modules>
+		<module>org.wso2.carbon.sts.resource</module>
+    	<module>org.wso2.carbon.sts.security.provider</module>
+    	<module>org.wso2.carbon.sts.samples</module>
+    	<module>org.wso2.carbon.sts.cxf</module>
+  	</modules>
 
 	<dependencyManagement>
 		<dependencies>

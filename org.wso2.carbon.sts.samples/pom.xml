@@ -1,22 +1,23 @@
 <?xml version="1.0"?>
-<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <modelVersion>4.0.0</modelVersion>
-  <parent>
-    <groupId>org.wso2.carbon.sts</groupId>
-    <artifactId>identity-inbound-auth-sts</artifactId>
-    <version>1.0.0</version>
-  </parent>
-  
-  <artifactId>org.wso2.carbon.sts.provider</artifactId>
-  <packaging>bundle</packaging>
-  <name>org.wso2.carbon.sts.provider</name>
-  
-  <dependencies>
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.wso2.carbon.sts</groupId>
+		<artifactId>identity-inbound-auth-sts</artifactId>
+		<version>1.0.0</version>
+	</parent>
+	<artifactId>org.wso2.carbon.sts.samples</artifactId>
+	<packaging>bundle</packaging>
+	<name>org.wso2.carbon.sts.samples</name>
+
+	<dependencies>
 		<dependency>
 			<groupId>org.wso2.carbon.sts</groupId>
 			<artifactId>org.wso2.carbon.sts.cxf</artifactId>
 			<version>1.0.0</version>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.wso2.eclipse.osgi</groupId>
@@ -29,7 +30,6 @@
 			<version>3.10.2.v20150203-1939</version>
 			<scope>provided</scope>
 		</dependency>
-		
 	</dependencies>
 
 	<build>
@@ -57,31 +57,16 @@
 
 	<properties>
 		<export.package>
-			org.wso2.carbon.sts.provider.*,
+			org.wso2.carbon.sts.samples.*,
 		</export.package>
 		<import.package>
 			org.osgi.framework.*;version="${osgi.framework.import.version.range}",
 			org.apache.log4j.*,
-			org.apache.cxf.ws.security.tokenstore.*,
-			org.apache.cxf.sts.token.validator.*,
-			org.apache.wss4j.common.ext.*,
 			org.apache.wss4j.common.crypto.*,
-			org.apache.wss4j.common.ext.*,
-			org.apache.cxf.sts.token.renewer.*,
-			org.apache.cxf.sts.token.provider.*,
-			org.apache.cxf.sts.service.*,
-			org.apache.cxf.sts.operation.*,
-			org.apache.cxf.sts.event.*,
-			org.apache.cxf.sts.claims.*,
 			org.apache.cxf.sts.*,
-			org.apache.cxf.ws.security.sts.provider.model.*,
-			org.apache.cxf.ws.security.sts.provider.*,
-			org.apache.cxf.staxutils.*,
-			org.apache.cxf.binding.soap.*,
-			org.apache.cxf.common.jaxb.*,
-			org.apache.cxf.common.jaxb.*,
-			org.apache.cxf.common.util.*,
-			org.apache.cxf.helpers.*,	
+			org.apache.wss4j.common.ext.*,
+			org.apache.wss4j.crypto.*,
+        	org.apache.wss4j.crypto.merlin.keystore.*,
 		</import.package>
 	</properties>
 
