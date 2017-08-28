@@ -4,6 +4,7 @@ import io.swagger.annotations.Info;
 import io.swagger.annotations.License;
 import io.swagger.annotations.SwaggerDefinition;
 
+import javax.security.auth.callback.CallbackHandler;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -90,5 +91,16 @@ public class STSResource extends AbstractResource {
 	public void addPolicy(SecurityPolicyService provider) {
 		
 		DataHolder.getInstance().setPolicyStreamReader(((SecurityPolicyServiceImpl)provider).getEffectivePolicy());
+	}
+	
+	@Reference(
+	    name = "callbackHandler",
+	    service = CallbackHandler.class,
+	    cardinality = ReferenceCardinality.MANDATORY,
+	    policy = ReferencePolicy.STATIC
+	)
+	public void addPasswordCallbackHandler(CallbackHandler callbackHandler) {
+			
+		DataHolder.getInstance().setPasswordCallbackHandler(callbackHandler);
 	}
 }

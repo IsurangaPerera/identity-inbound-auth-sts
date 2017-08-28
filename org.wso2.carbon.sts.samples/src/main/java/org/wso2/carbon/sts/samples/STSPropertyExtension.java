@@ -23,7 +23,7 @@ public class STSPropertyExtension extends StaticSTSProperties {
 		
         Crypto crypto = null;
 		try {
-			crypto = CryptoFactory.getInstance(getEncryptionProps());
+			crypto = CryptoFactory.getInstance(getEncryptionProps(bundleContext));
 		} catch (WSSecurityException e) {
 			e.printStackTrace();
 		}
@@ -37,13 +37,13 @@ public class STSPropertyExtension extends StaticSTSProperties {
         
 	}
 	
-	private Properties getEncryptionProps() {
+	private Properties getEncryptionProps(BundleContext c) {
         Properties properties = new Properties();
         properties.put(
             "org.apache.wss4j.crypto.provider", "org.apache.wss4j.common.crypto.Merlin"
         );
         properties.put("org.apache.wss4j.crypto.merlin.keystore.password", "stsspass");
-        properties.put("org.apache.wss4j.crypto.merlin.keystore.file", "stsstore.jks");
+        properties.put("org.apache.wss4j.crypto.merlin.keystore.file", c.getBundle().getResource("stsstore.jks").toString());
 
         return properties;
     }

@@ -34,28 +34,9 @@ public class MessageBuilderComponent {
 		try {
 			Bus bus = new ExtensionManagerBus();
 			((ExtensionManagerBus)bus).initialize();
-			
-			/*bus.setExtension(new AssertionBuilderRegistryImpl(),
-					AssertionBuilderRegistry.class);
-			bus.setExtension(new PolicyInterceptorProviderRegistryImpl(),
-					PolicyInterceptorProviderRegistry.class);
-
-			bus.setExtension(new PolicyEngineImpl(bus), PolicyEngine.class);
-
-			@SuppressWarnings("unused")
-			PolicyBuilderImpl pb = new PolicyBuilderImpl(bus);
-
-			AssertionBuilderRegistryImpl reg = (AssertionBuilderRegistryImpl) bus
-					.getExtension(AssertionBuilderRegistry.class);
-			reg.setBus(bus);
-
-			pb = new PolicyBuilderImpl(bus);
-
-			@SuppressWarnings("unused")
-			WSSecurityPolicyLoader loader = new WSSecurityPolicyLoader(bus);*/
 
 			WSDLDefinitionBuilder builder = new WSDLDefinitionBuilder(bus);
-			Definition definition = builder.build("ws-trust-1.4-service.wsdl");
+			Definition definition = builder.build(c.getBundle().getResource("ws-trust-1.4-service.wsdl").toString());
 			WSDLServiceBuilder wsb = new WSDLServiceBuilder(bus);
 
 			List<ServiceInfo> serviceInfo = wsb.buildServices(definition);

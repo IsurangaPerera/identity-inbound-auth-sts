@@ -4,6 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.nio.ByteBuffer;
 import java.util.List;
 
+import javax.security.auth.callback.CallbackHandler;
 import javax.xml.namespace.QName;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPMessage;
@@ -151,10 +152,10 @@ public class MSF4JMessageInInterceptor implements Interceptor {
 	private void setExtensions(Message m) {
 
 		Exchange ex = DataHolder.getInstance().getExchange();
+		CallbackHandler cb = DataHolder.getInstance().getPasswordCallbackHandler();
 		ex.getEndpoint()
 				.getEndpointInfo()
-				.setProperty("security.callback-handler",
-						new PasswordCallbackHandler());
+				.setProperty("security.callback-handler", cb);
 		ex.getEndpoint()
 				.getEndpointInfo()
 				.setProperty(PolicyConstants.POLICY_OVERRIDE,
