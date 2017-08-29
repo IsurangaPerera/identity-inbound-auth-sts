@@ -90,7 +90,7 @@ public class STSResource extends AbstractResource {
 	)
 	public void addPolicy(SecurityPolicyService provider) {
 		
-		DataHolder.getInstance().setPolicyStreamReader(((SecurityPolicyServiceImpl)provider).getEffectivePolicy());
+		DataHolder.getInstance().setPolicy(((SecurityPolicyServiceImpl)provider).getEffectivePolicy());
 	}
 	
 	@Reference(

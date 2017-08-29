@@ -9,6 +9,9 @@ import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
+import org.apache.cxf.Bus;
+import org.apache.cxf.bus.extension.ExtensionManagerBus;
+import org.apache.cxf.ws.policy.PolicyBuilder;
 import org.osgi.framework.BundleContext;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
@@ -29,6 +32,10 @@ public class SecurityComponent {
 	
 	@Activate
 	public void start(BundleContext bundleContext) throws Exception {
+		
+		Bus bus = new ExtensionManagerBus();
+		PolicyBuilder builder = bus.getExtension(PolicyBuilder.class);
+		
 		XMLStreamReader streamReader = null;
 
 		URL resource = bundleContext.getBundle().getResource(
@@ -63,7 +70,7 @@ public class SecurityComponent {
 					e.printStackTrace();
 				}
 				
-				scenario.setPolicyStreamReader(streamReader);
+				scenario.setPolicy(builder.getPolicy(streamReader));
 				scenario.setCategory(eElement.getElementsByTagName("Category")
 						.item(0).getTextContent());
 				scenario.setScenarioId(id);

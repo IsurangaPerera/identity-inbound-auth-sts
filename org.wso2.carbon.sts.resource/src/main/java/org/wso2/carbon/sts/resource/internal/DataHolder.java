@@ -1,11 +1,8 @@
 package org.wso2.carbon.sts.resource.internal;
 
 import javax.security.auth.callback.CallbackHandler;
-import javax.xml.stream.XMLStreamReader;
 
-import org.apache.cxf.bus.extension.ExtensionManagerBus;
 import org.apache.cxf.message.Exchange;
-import org.apache.cxf.ws.policy.PolicyBuilder;
 import org.apache.neethi.Policy;
 import org.wso2.carbon.sts.provider.DefaultSecurityTokenServiceProvider;
 
@@ -45,11 +42,6 @@ public class DataHolder {
 	
 	public DefaultSecurityTokenServiceProvider getServiceProvider() {
 		return provider;
-	}
-
-	public void setPolicyStreamReader(XMLStreamReader policyStreamReader) {
-		PolicyBuilder pb = new ExtensionManagerBus().getExtension(PolicyBuilder.class);
-		this.setPolicy(pb.getPolicy(policyStreamReader));
 	}
 
 	public void setPasswordCallbackHandler(CallbackHandler callbackHandler) {
