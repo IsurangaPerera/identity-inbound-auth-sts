@@ -8,6 +8,7 @@ import javax.xml.ws.Provider;
 import javax.xml.ws.WebServiceContext;
 
 import org.apache.cxf.sts.STSPropertiesMBean;
+import org.apache.cxf.sts.claims.ClaimsHandler;
 import org.apache.cxf.sts.claims.ClaimsManager;
 import org.apache.cxf.sts.event.STSEventListener;
 import org.apache.cxf.sts.operation.AbstractOperation;
@@ -140,7 +141,10 @@ public class DefaultSecurityTokenServiceProvider extends CarbonSecurityTokenServ
 		abstractOperation.setServices(services);
 		abstractOperation.setReturnReferences(returnReferences);
 		abstractOperation.setTokenStore(tokenStore);
+		
+		claimsManager.setClaimHandlers(DataHolder.getInstance().getCalimsHandler());
 		abstractOperation.setClaimsManager(claimsManager);
+		
 		abstractOperation.setEventListener(eventListener);
     }
     
@@ -152,5 +156,15 @@ public class DefaultSecurityTokenServiceProvider extends CarbonSecurityTokenServ
     )
     public void addStaticPropertyBean(STSPropertiesMBean staticProperty) {
     	DataHolder.getInstance().setStaticPropertyBean(staticProperty);
+    }	
+    
+    @Reference(
+            name = "ClaimsHandler",
+            service = ClaimsHandler.class,
+            cardinality = ReferenceCardinality.OPTIONAL,
+            policy = ReferencePolicy.STATIC
+    )
+    public void addClaimsHandler(ClaimsHandler claimsHandler) {
+    	DataHolder.getInstance().addClaimsHandler(claimsHandler);
     }	
 }
