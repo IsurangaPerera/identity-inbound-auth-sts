@@ -9,9 +9,8 @@ This project focuses on implementing the WS-Trust specification for the WSO2 Ide
 
 # Documentation
 
- - [https://github.com/IsurangaPerera/identity-inbound-auth-sts/tree/master/documentation][df1]
-            or most recent
- - [https://docs.google.com/document/d/1ZRLQnazRgH4ZZu2luxFmYjXVpRw17n29NkkjeTXVWn0/edit?usp=sharing][df1]
+ - https://github.com/IsurangaPerera/identity-inbound-auth-sts/tree/master/documentation
+ - https://docs.google.com/document/d/1ZRLQnazRgH4ZZu2luxFmYjXVpRw17n29NkkjeTXVWn0/edit?usp=sharingdf1
 
 # Sample
 
