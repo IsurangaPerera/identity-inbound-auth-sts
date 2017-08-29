@@ -1,7 +1,6 @@
 package org.wso2.carbon.sts.security.provider;
 
-import javax.xml.stream.XMLStreamReader;
-
+import org.apache.neethi.Policy;
 import org.osgi.service.component.annotations.Component;
 import org.wso2.carbon.sts.security.provider.util.SecurityScenarioDatabase;
 
@@ -19,11 +18,11 @@ public class SecurityPolicyServiceImpl implements SecurityPolicyService {
 	}
 	
 	@Override
-	public XMLStreamReader getEffectivePolicy() {
+	public Policy getEffectivePolicy() {
 		
 		//Need to get policy using tenant information
 		/*String scenario = DataHolder.getInstance().getScenario();*/
 		String scenario = "UTOverTransport";
-		return SecurityScenarioDatabase.getInstance().getByWsuId(scenario).getPolicyStreamReader();
+		return SecurityScenarioDatabase.getInstance().getByWsuId(scenario).getPolicy();
 	}
 }

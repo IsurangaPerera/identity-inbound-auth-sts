@@ -1,9 +1,9 @@
 package org.wso2.carbon.sts.security.provider;
 
-import javax.xml.stream.XMLStreamReader;
+import org.apache.neethi.Policy;
 
 public interface SecurityPolicyService {
 	
 	public void updateEffectivePolicy(String scenario);
-	public XMLStreamReader getEffectivePolicy();
+	public Policy getEffectivePolicy();
 }

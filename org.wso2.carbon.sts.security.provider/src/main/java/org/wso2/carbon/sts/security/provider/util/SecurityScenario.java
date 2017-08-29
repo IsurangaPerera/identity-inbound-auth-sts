@@ -3,7 +3,7 @@ package org.wso2.carbon.sts.security.provider.util;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.xml.stream.XMLStreamReader;
+import org.apache.neethi.Policy;
 
 public class SecurityScenario {
 
@@ -21,7 +21,7 @@ public class SecurityScenario {
     private String wsuId;
     private String type;
     private boolean isGeneralPolicy;
-    private XMLStreamReader policyStreamReader;
+    private Policy policy;
 
     /**
      * Constructs a new SecurityScenarioDO.
@@ -167,11 +167,11 @@ public class SecurityScenario {
         this.isGeneralPolicy = isGeneralPolicy;
     }
 
-	public void setPolicyStreamReader(XMLStreamReader streamReader) {
-		this.policyStreamReader = streamReader;
+	public void setPolicy(Policy policy) {
+		this.policy = policy;
 	}
 	
-	public XMLStreamReader getPolicyStreamReader() {
-		return this.policyStreamReader;
+	public Policy getPolicy() {
+		return this.policy;
 	}
 }
