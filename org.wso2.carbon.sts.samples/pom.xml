@@ -64,6 +64,7 @@
 			org.apache.log4j.*,
 			org.apache.wss4j.common.crypto.*,
 			org.apache.cxf.sts.*,
+			org.apache.cxf.rt.security.claims.*,
 			org.apache.wss4j.common.ext.*,
 			org.apache.wss4j.crypto.*,
         	org.apache.wss4j.crypto.merlin.keystore.*,
