@@ -10,7 +10,7 @@ import org.apache.wss4j.common.ext.WSPasswordCallback;
 import org.osgi.service.component.annotations.Component;
 
 @Component(
-		name = "org.wso2.carbon.sts.callbackhandler",
+		name = "org.wso2.carbon.sts.CallbackHandler",
 		service = CallbackHandler.class,
 		immediate = true
 )
