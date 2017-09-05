@@ -2,6 +2,8 @@ package org.wso2.carbon.sts.security.provider;
 
 import org.apache.neethi.Policy;
 import org.osgi.service.component.annotations.Component;
+import org.w3c.dom.Document;
+import org.wso2.carbon.sts.security.internal.DataHolder;
 import org.wso2.carbon.sts.security.provider.util.SecurityScenarioDatabase;
 
 @Component(
@@ -24,5 +26,10 @@ public class SecurityPolicyServiceImpl implements SecurityPolicyService {
 		/*String scenario = DataHolder.getInstance().getScenario();*/
 		String scenario = "UTOverTransport";
 		return SecurityScenarioDatabase.getInstance().getByWsuId(scenario).getPolicy();
+	}
+
+	@Override
+	public Document gePolicyDocument() {
+		return DataHolder.getInstance().getPolicyDocument();
 	}
 }

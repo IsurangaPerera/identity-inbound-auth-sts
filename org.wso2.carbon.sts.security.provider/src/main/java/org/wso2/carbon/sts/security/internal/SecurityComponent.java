@@ -1,10 +1,12 @@
 package org.wso2.carbon.sts.security.internal;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.net.URL;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
@@ -21,6 +23,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.wso2.carbon.sts.security.provider.util.SecurityScenario;
 import org.wso2.carbon.sts.security.provider.util.SecurityScenarioDatabase;
+import org.xml.sax.SAXException;
 
 @Component(
 		name = "org.wso2.carbon.sts.security.component",
@@ -62,7 +65,17 @@ public class SecurityComponent {
 
 				URL policyPath = bundleContext.getBundle().getResource(
 						"/scenarios/" + id + "-policy.xml");
-
+				
+				try {
+					dBuilder = dbFactory.newDocumentBuilder();
+					dbFactory.setIgnoringComments(true);
+					Document docPolicy = dBuilder.parse(policyPath.openStream());
+					docPolicy.getDocumentElement().normalize();
+					DataHolder.getInstance().addPolicyDocument(docPolicy);
+				} catch (ParserConfigurationException | SAXException | IOException e) {
+					e.printStackTrace();
+				}
+				
 				try {
 					streamReader = factory.createXMLStreamReader(policyPath
 							.openStream());

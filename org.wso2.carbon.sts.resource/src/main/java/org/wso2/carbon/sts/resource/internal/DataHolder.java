@@ -4,6 +4,7 @@ import javax.security.auth.callback.CallbackHandler;
 
 import org.apache.cxf.message.Exchange;
 import org.apache.neethi.Policy;
+import org.w3c.dom.Document;
 import org.wso2.carbon.sts.provider.DefaultSecurityTokenServiceProvider;
 
 public class DataHolder {
@@ -13,6 +14,9 @@ public class DataHolder {
 	private DefaultSecurityTokenServiceProvider provider;
 
     private static DataHolder instance = new DataHolder();
+    
+    private String wsdl;
+	private Document policyDocument;
 
     private DataHolder() {}
 
@@ -50,5 +54,21 @@ public class DataHolder {
 	
 	public CallbackHandler getPasswordCallbackHandler() {
 		return this.callbackHandler;
+	}
+
+	public void addWSDL(String doc) {
+		this.wsdl = doc;
+	}
+	
+	public String getWSDL() {
+		return this.wsdl;
+	}
+
+	public void setPolicyDocument(Document policyDocument) {
+		this.policyDocument =  policyDocument;
+	}
+	
+	public Document getPolicyDocument() {
+		return this.policyDocument;
 	}
 }
