@@ -69,7 +69,7 @@ public class MSF4JMessageInInterceptor implements Interceptor {
 	public boolean preCall(Request request, Response response,
 			ServiceMethodInfo smi) throws SoapFault {
 
-		if (METHOD.equals(smi.getMethodName())) {
+		if (METHOD.equals(smi.getMethodName()) && request.getHttpMethod().equalsIgnoreCase("POST")) {
 
 			SAAJInInterceptor saajIn = new SAAJInInterceptor();
 			boolean faultExist = false;
