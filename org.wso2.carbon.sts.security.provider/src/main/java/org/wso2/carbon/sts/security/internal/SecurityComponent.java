@@ -44,6 +44,7 @@ public class SecurityComponent {
 		URL resource = bundleContext.getBundle().getResource(
 				"/scenarios/scenario-config.xml");
 		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+		dbFactory.setNamespaceAware(true);
 		DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 		Document doc = dBuilder.parse(resource.openStream());
 		doc.getDocumentElement().normalize();
