@@ -72,7 +72,8 @@ public class SecurityComponent {
 					dbFactory.setIgnoringComments(true);
 					Document docPolicy = dBuilder.parse(policyPath.openStream());
 					docPolicy.getDocumentElement().normalize();
-					DataHolder.getInstance().addPolicyDocument(docPolicy);
+					scenario.addPolicyDocument(docPolicy);
+					
 				} catch (ParserConfigurationException | SAXException | IOException e) {
 					e.printStackTrace();
 				}

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.neethi.Policy;
+import org.w3c.dom.Document;
 
 public class SecurityScenario {
 
@@ -22,6 +23,7 @@ public class SecurityScenario {
     private String type;
     private boolean isGeneralPolicy;
     private Policy policy;
+	private Document policyDocument;
 
     /**
      * Constructs a new SecurityScenarioDO.
@@ -173,5 +175,13 @@ public class SecurityScenario {
 	
 	public Policy getPolicy() {
 		return this.policy;
+	}
+	
+	public void addPolicyDocument(Document docPolicy) {
+		this.policyDocument = docPolicy;
+	}
+	
+	public Document getPolicyDocument(){
+		return this.policyDocument;
 	}
 }

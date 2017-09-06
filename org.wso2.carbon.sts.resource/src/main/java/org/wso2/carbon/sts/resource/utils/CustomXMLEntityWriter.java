@@ -1,6 +1,7 @@
 package org.wso2.carbon.sts.resource.utils;
 
 import java.nio.ByteBuffer;
+import java.nio.charset.Charset;
 
 import javax.ws.rs.core.MediaType;
 
@@ -8,8 +9,7 @@ import org.wso2.carbon.messaging.CarbonCallback;
 import org.wso2.carbon.messaging.CarbonMessage;
 import org.wso2.carbon.transport.http.netty.common.Constants;
 import org.wso2.msf4j.Response;
-import org.wso2.msf4j.internal.beanconversion.TextPlainConverter;
-import org.wso2.msf4j.internal.entitywriter.EntityWriter;
+import org.wso2.msf4j.beanconversion.BeanConversionException;
 
 public class CustomXMLEntityWriter implements EntityWriter<String> {
 
@@ -27,7 +27,7 @@ public class CustomXMLEntityWriter implements EntityWriter<String> {
 	@Override
 	public void writeData(CarbonMessage carbonMessage, String entity,
 			String mediaType, int chunkSize, CarbonCallback cb) {
-		ByteBuffer byteBuffer = new TextPlainConverter().convertToMedia(entity);
+		ByteBuffer byteBuffer = convertToMedia(entity);
 		carbonMessage.addMessageBody(byteBuffer);
 		carbonMessage.setEndOfMsgAdded(true);
 		if (chunkSize == Response.NO_CHUNK) {
@@ -39,4 +39,15 @@ public class CustomXMLEntityWriter implements EntityWriter<String> {
 		carbonMessage.setHeader(Constants.HTTP_CONTENT_TYPE, MediaType.TEXT_XML);
 		cb.done(carbonMessage);
 	}
+	
+	private ByteBuffer convertToMedia(Object object) {
+        if (object == null) {
+            throw new BeanConversionException("Object cannot be null");
+        }
+        return toMedia(object);
+    }
+	
+	private ByteBuffer toMedia(Object object) {
+        return ByteBuffer.wrap(object.toString().getBytes(Charset.defaultCharset()));
+    }
 }

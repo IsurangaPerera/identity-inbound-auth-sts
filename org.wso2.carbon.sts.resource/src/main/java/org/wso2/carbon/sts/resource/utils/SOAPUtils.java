@@ -14,7 +14,6 @@ import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPFault;
 import javax.xml.soap.SOAPMessage;
 import javax.xml.soap.SOAPPart;
-import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
@@ -85,10 +84,6 @@ public class SOAPUtils {
 			StreamResult result = new StreamResult(writer);
 			TransformerFactory tf = TransformerFactory.newInstance();
 			Transformer transformer = tf.newTransformer();
-			transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "no");
-	        transformer.setOutputProperty(OutputKeys.METHOD, "xml");
-	        transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-	        transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
 			transformer.transform(response, result);
 			
 
