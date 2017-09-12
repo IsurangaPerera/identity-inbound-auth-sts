@@ -8,6 +8,7 @@ import javax.xml.ws.Provider;
 import javax.xml.ws.WebServiceContext;
 
 import org.apache.cxf.sts.STSPropertiesMBean;
+import org.apache.cxf.sts.cache.DefaultInMemoryTokenStore;
 import org.apache.cxf.sts.claims.ClaimsHandler;
 import org.apache.cxf.sts.claims.ClaimsManager;
 import org.apache.cxf.sts.event.STSEventListener;
@@ -101,6 +102,7 @@ public class DefaultSecurityTokenServiceProvider extends CarbonSecurityTokenServ
     private TokenIssueOperation createTokenIssueOperation() {
         TokenIssueOperation issueOperation = new TokenIssueOperation();
         populateAbstractOperation(issueOperation);
+        issueOperation.setTokenStore(getCurrentTokenStore());
 
         return issueOperation;
     }
@@ -108,6 +110,7 @@ public class DefaultSecurityTokenServiceProvider extends CarbonSecurityTokenServ
     private TokenValidateOperation createTokenValidateOperation() {
         TokenValidateOperation validateOperation = new TokenValidateOperation();
         populateAbstractOperation(validateOperation);
+        validateOperation.setTokenStore(getCurrentTokenStore());
 
         return validateOperation;
     }
@@ -115,12 +118,21 @@ public class DefaultSecurityTokenServiceProvider extends CarbonSecurityTokenServ
     private TokenRenewOperation createTokenRenewOperation() {
         TokenRenewOperation renewOperation = new TokenRenewOperation();
         populateAbstractOperation(renewOperation);
+        renewOperation.setTokenStore(getCurrentTokenStore());
 
         List<TokenRenewer> tokenRenewers = new ArrayList<>();
         tokenRenewers.add(new SAMLTokenRenewer());
         renewOperation.setTokenRenewers(tokenRenewers);
 
         return renewOperation;
+    }
+    
+    @SuppressWarnings("resource")
+	private TokenStore getCurrentTokenStore() {
+    	TokenStore tokenStore = DataHolder.getInstance().getTokenStore();
+        tokenStore = (tokenStore == null)? new DefaultInMemoryTokenStore() : tokenStore;
+        
+        return tokenStore;
     }
 
     private void populateAbstractOperation(AbstractOperation abstractOperation) {
@@ -131,7 +143,7 @@ public class DefaultSecurityTokenServiceProvider extends CarbonSecurityTokenServ
         tokenValidators.add(new SAMLTokenValidator());
         tokenValidators.add(new UsernameTokenValidator());
         tokenValidators.add(new X509TokenValidator());
-
+        
         abstractOperation.setTokenProviders(tokenProviders);
         abstractOperation.setTokenValidators(tokenValidators);
         
@@ -167,4 +179,14 @@ public class DefaultSecurityTokenServiceProvider extends CarbonSecurityTokenServ
     public void addClaimsHandler(ClaimsHandler claimsHandler) {
     	DataHolder.getInstance().addClaimsHandler(claimsHandler);
     }	
+    
+    @Reference(
+    	    name = "tokenStore",
+    	    service = TokenStore.class,
+    	    cardinality = ReferenceCardinality.OPTIONAL,
+    	    policy = ReferencePolicy.STATIC
+    )
+    public void addTokenStore(TokenStore tokenStore) {
+    	DataHolder.getInstance().setTokenStore(tokenStore);
+    }
 }
