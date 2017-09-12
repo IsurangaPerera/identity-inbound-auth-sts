@@ -1,13 +1,16 @@
 package org.wso2.carbon.sts.provider.internal;
 
 import java.util.ArrayList;
+
 import org.apache.cxf.sts.STSPropertiesMBean;
 import org.apache.cxf.sts.claims.ClaimsHandler;
+import org.apache.cxf.ws.security.tokenstore.TokenStore;
 
 public class DataHolder {
 	private static DataHolder dataHolder = new DataHolder();
 	private STSPropertiesMBean staticPropertBean;
 	private ArrayList<ClaimsHandler> claimHandlerList = new ArrayList<ClaimsHandler>();
+	private TokenStore tokenStore;
 	
 	private DataHolder() {}
 	
@@ -31,5 +34,13 @@ public class DataHolder {
 	
 	public ArrayList<ClaimsHandler> getCalimsHandler() {
 		return this.claimHandlerList;
+	}
+	
+	public void setTokenStore(TokenStore tokenStore) {
+		this.tokenStore = tokenStore; 
+	}
+	
+	public TokenStore getTokenStore() {
+		return this.tokenStore;
 	}
 }
