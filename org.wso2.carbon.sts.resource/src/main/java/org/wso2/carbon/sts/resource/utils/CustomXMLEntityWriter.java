@@ -13,17 +13,11 @@ import org.wso2.msf4j.beanconversion.BeanConversionException;
 
 public class CustomXMLEntityWriter implements EntityWriter<String> {
 
-	/**
-	 * Supported entity type.
-	 */
 	@Override
 	public Class<String> getType() {
 		return String.class;
 	}
 
-	/**
-	 * Write the entity to the carbon message.
-	 */
 	@Override
 	public void writeData(CarbonMessage carbonMessage, String entity,
 			String mediaType, int chunkSize, CarbonCallback cb) {
