@@ -30,14 +30,30 @@ public class STSPropertyExtension extends StaticSTSProperties {
         
 		setEncryptionCrypto(crypto);
         setSignatureCrypto(crypto);
-        setEncryptionUsername("myservicekey");
+        
+        this.setSignatureCryptoProperties(getSignatureProps(bundleContext));
         setSignatureUsername("mystskey");
+        
+        this.setEncryptionCryptoProperties(getEncryptionProps(bundleContext));
+        setEncryptionUsername("myservicekey");
+        
         setCallbackHandler(new PasswordCallbackHandler());
         setIssuer("wso2-sts");
         
 	}
 	
 	private Properties getEncryptionProps(BundleContext c) {
+        Properties properties = new Properties();
+        properties.put(
+            "org.apache.wss4j.crypto.provider", "org.apache.wss4j.common.crypto.Merlin"
+        );
+        properties.put("org.apache.wss4j.crypto.merlin.keystore.password", "stsspass");
+        properties.put("org.apache.wss4j.crypto.merlin.keystore.file", c.getBundle().getResource("stsstore.jks").toString());
+
+        return properties;
+    }
+	
+	private Properties getSignatureProps(BundleContext c) {
         Properties properties = new Properties();
         properties.put(
             "org.apache.wss4j.crypto.provider", "org.apache.wss4j.common.crypto.Merlin"

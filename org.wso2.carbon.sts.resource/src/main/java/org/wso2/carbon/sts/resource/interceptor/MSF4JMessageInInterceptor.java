@@ -3,6 +3,7 @@ package org.wso2.carbon.sts.resource.interceptor;
 import java.io.ByteArrayInputStream;
 import java.nio.ByteBuffer;
 import java.util.List;
+import java.util.Properties;
 
 import javax.security.auth.callback.CallbackHandler;
 import javax.xml.namespace.QName;
@@ -27,6 +28,8 @@ import org.apache.cxf.message.Message;
 import org.apache.cxf.message.MessageImpl;
 import org.apache.cxf.phase.PhaseInterceptorChain;
 import org.apache.cxf.staxutils.StaxUtils;
+import org.apache.cxf.sts.STSPropertiesMBean;
+import org.apache.cxf.sts.StaticSTSProperties;
 import org.apache.cxf.ws.policy.PolicyConstants;
 import org.apache.cxf.ws.policy.PolicyInInterceptor;
 import org.osgi.service.component.annotations.Component;
@@ -152,14 +155,45 @@ public class MSF4JMessageInInterceptor implements Interceptor {
 	private void setExtensions(Message m) {
 
 		Exchange ex = DataHolder.getInstance().getExchange();
-		CallbackHandler cb = DataHolder.getInstance().getPasswordCallbackHandler();
-		ex.getEndpoint()
-				.getEndpointInfo()
-				.setProperty("security.callback-handler", cb);
+
+		CallbackHandler cb = DataHolder.getInstance()
+				.getPasswordCallbackHandler();
+		STSPropertiesMBean staticProperty = DataHolder.getInstance()
+				.getStaticPropertyBean();
+
 		ex.getEndpoint()
 				.getEndpointInfo()
 				.setProperty(PolicyConstants.POLICY_OVERRIDE,
 						DataHolder.getInstance().getPolicy());
+
+		cb = (cb == null) ? staticProperty.getCallbackHandler() : cb;
+		if (cb != null) {
+			ex.getEndpoint().getEndpointInfo()
+					.setProperty("security.callback-handler", cb);
+		}
+		
+		Properties sigProp = (Properties) ((StaticSTSProperties) staticProperty)
+				.getSignatureCryptoProperties();
+		String sigUsername = staticProperty.getSignatureUsername();
+		if (sigProp != null && sigUsername != null) {
+			ex.getEndpoint().getEndpointInfo()
+					.setProperty("security.signature.properties", sigProp);
+
+			ex.getEndpoint().getEndpointInfo()
+					.setProperty("security.signature.username", sigUsername);
+		}
+		
+		Properties encProp = (Properties) ((StaticSTSProperties) staticProperty)
+				.getSignatureCryptoProperties();
+		String encUsername = staticProperty.getEncryptionUsername();
+		if (encProp != null && encUsername != null) {
+			ex.getEndpoint().getEndpointInfo()
+					.setProperty("security.encryption.properties", encProp);
+
+			ex.getEndpoint().getEndpointInfo()
+					.setProperty("security.encryption.username", encUsername);
+		}
+		
 		/*
 		 * ex.getEndpoint() .getEndpointInfo()
 		 * .setProperty(SecurityConstants.ENABLE_STREAMING_SECURITY,

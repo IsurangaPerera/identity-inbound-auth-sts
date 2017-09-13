@@ -3,6 +3,7 @@ package org.wso2.carbon.sts.resource.internal;
 import javax.security.auth.callback.CallbackHandler;
 
 import org.apache.cxf.message.Exchange;
+import org.apache.cxf.sts.STSPropertiesMBean;
 import org.apache.neethi.Policy;
 import org.w3c.dom.Document;
 import org.wso2.carbon.sts.provider.DefaultSecurityTokenServiceProvider;
@@ -17,6 +18,7 @@ public class DataHolder {
     
     private String wsdl;
 	private Document policyDocument;
+	private STSPropertiesMBean staticProperty;
 
     private DataHolder() {}
 
@@ -70,5 +72,13 @@ public class DataHolder {
 	
 	public Document getPolicyDocument() {
 		return this.policyDocument;
+	}
+
+	public void setStaticPropertyBean(STSPropertiesMBean staticProperty) {
+		this.staticProperty = staticProperty;	
+	}
+	
+	public STSPropertiesMBean getStaticPropertyBean() {
+		return this.staticProperty;
 	}
 }

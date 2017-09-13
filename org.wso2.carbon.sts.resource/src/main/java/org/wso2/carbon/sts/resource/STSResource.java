@@ -27,6 +27,7 @@ import javax.xml.transform.stream.StreamResult;
 import javax.xml.ws.Provider;
 
 import org.apache.cxf.binding.soap.SoapFault;
+import org.apache.cxf.sts.STSPropertiesMBean;
 import org.osgi.framework.BundleContext;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
@@ -106,6 +107,7 @@ public class STSResource extends AbstractResource {
 		Document doc = null;
 		try {
 			dbFactory.setIgnoringComments(true);
+			dbFactory.setNamespaceAware(true);
 			dBuilder = dbFactory.newDocumentBuilder();
 			doc = dBuilder.parse(resource.openStream());
 			Document policyDoc = DataHolder.getInstance().getPolicyDocument();
@@ -173,4 +175,14 @@ public class STSResource extends AbstractResource {
 			
 		DataHolder.getInstance().setPasswordCallbackHandler(callbackHandler);
 	}
+	
+	@Reference(
+            name = "StaticProperty",
+            service = STSPropertiesMBean.class,
+            cardinality = ReferenceCardinality.OPTIONAL,
+            policy = ReferencePolicy.STATIC
+    )
+    public void addStaticPropertyBean(STSPropertiesMBean staticProperty) {
+    	DataHolder.getInstance().setStaticPropertyBean(staticProperty);
+    }	
 }
