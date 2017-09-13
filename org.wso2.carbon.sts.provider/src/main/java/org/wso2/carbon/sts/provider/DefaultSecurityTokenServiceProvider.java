@@ -51,6 +51,7 @@ public class DefaultSecurityTokenServiceProvider extends CarbonSecurityTokenServ
 
     public DefaultSecurityTokenServiceProvider() throws Exception {
         super();
+        this.services = DataHolder.getInstance().getStaticServiceBean();
     }
     
     public void setWebServiceContext(WebServiceContext context) {
@@ -181,7 +182,7 @@ public class DefaultSecurityTokenServiceProvider extends CarbonSecurityTokenServ
     }	
     
     @Reference(
-    	    name = "tokenStore",
+    	    name = "TokenStore",
     	    service = TokenStore.class,
     	    cardinality = ReferenceCardinality.OPTIONAL,
     	    policy = ReferencePolicy.STATIC
@@ -189,4 +190,14 @@ public class DefaultSecurityTokenServiceProvider extends CarbonSecurityTokenServ
     public void addTokenStore(TokenStore tokenStore) {
     	DataHolder.getInstance().setTokenStore(tokenStore);
     }
+    
+    @Reference(
+            name = "StaticService",
+            service = ServiceMBean.class,
+            cardinality = ReferenceCardinality.OPTIONAL,
+            policy = ReferencePolicy.STATIC
+    )
+    public void addStaticServiceBean(ServiceMBean staticService) {
+    	DataHolder.getInstance().setStaticServiceBean(staticService);
+    }	
 }
