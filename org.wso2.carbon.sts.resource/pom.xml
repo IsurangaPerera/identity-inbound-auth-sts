@@ -69,7 +69,11 @@
 	</build>
 
 	<properties>
+		<private.package>
+			org.wso2.carbon.sts.resource.internal
+		</private.package>
 		<export.package>
+			!org.wso2.carbon.sts.resource.internal,
 			org.wso2.carbon.sts.resource.*;version="${project.version}"
 		</export.package>
 		<bundle.classpath>.</bundle.classpath>

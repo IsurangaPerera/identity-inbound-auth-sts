@@ -56,7 +56,11 @@
 	</build>
 
 	<properties>
+		<private.package>
+			org.wso2.carbon.sts.provider.internal
+		</private.package>
 		<export.package>
+			!org.wso2.carbon.sts.provider.internal,
 			org.wso2.carbon.sts.provider.*,
 		</export.package>
 		<import.package>
