@@ -1,9 +1,11 @@
 package org.wso2.carbon.sts.provider.internal;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.cxf.sts.STSPropertiesMBean;
 import org.apache.cxf.sts.claims.ClaimsHandler;
+import org.apache.cxf.sts.service.ServiceMBean;
 import org.apache.cxf.ws.security.tokenstore.TokenStore;
 
 public class DataHolder {
@@ -11,6 +13,7 @@ public class DataHolder {
 	private STSPropertiesMBean staticPropertBean;
 	private ArrayList<ClaimsHandler> claimHandlerList = new ArrayList<ClaimsHandler>();
 	private TokenStore tokenStore;
+	private List<ServiceMBean> staticService = new ArrayList<>();
 	
 	private DataHolder() {}
 	
@@ -42,5 +45,13 @@ public class DataHolder {
 	
 	public TokenStore getTokenStore() {
 		return this.tokenStore;
+	}
+
+	public void setStaticServiceBean(ServiceMBean staticService) {
+		this.staticService.add(staticService);
+	}
+	
+	public List<ServiceMBean> getStaticServiceBean() {
+		return this.staticService;
 	}
 }
